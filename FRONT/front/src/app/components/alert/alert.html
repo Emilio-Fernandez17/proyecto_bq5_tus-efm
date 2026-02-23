@@ -1,0 +1,6 @@
+<div class="alert-container" *ngIf="visible">
+  <div class="alert" [ngClass]="'alert-' + tipo">
+    <span class="alert-mensaje">{{ mensaje }}</span>
+    <button class="alert-cerrar" (click)="cerrar()">&times;</button>
+  </div>
+</div>

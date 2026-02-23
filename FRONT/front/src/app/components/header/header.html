@@ -1,0 +1,24 @@
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <a href="#" (click)="navegar('/', $event)">🚗 Catálogo de Coches</a>
+    </div>
+    
+    <button class="hamburger" [class.active]="menuAbierto" (click)="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    
+    <nav class="nav-menu" [class.open]="menuAbierto">
+      <ul>
+        <li><a href="#" (click)="navegar('/', $event)">Inicio</a></li>
+        <li><a href="#" (click)="navegar('/buscar', $event)">Buscar</a></li>
+        <li><a href="#" (click)="buscarPorCategoria('SUV', $event)">SUV</a></li>
+        <li><a href="#" (click)="buscarPorCategoria('Sedán', $event)">Sedán</a></li>
+        <li><a href="#" (click)="buscarPorCategoria('Deportivo', $event)">Deportivo</a></li>
+        <li><a href="#" (click)="buscarPorCategoria('Eléctrico', $event)">Eléctrico</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,46 @@
+<div class="coche-card">
+  <div class="card-image">
+    <img [src]="imagenUrl" 
+         [alt]="coche.marca + ' ' + coche.modelo" 
+         (error)="imagenUrl = 'https://via.placeholder.com/300x200?text=Sin+imagen'">
+  </div>
+  
+  <div class="card-content">
+    <h3>{{ coche.marca }} {{ coche.modelo }}</h3>
+    <p class="categoria">{{ coche.categoria }}</p>
+    <p class="precio">{{ coche.precio | currency:'EUR':'symbol':'1.0-0' }}</p>
+    <button class="btn-ver-mas" (click)="abrirModal()">Ver más</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <div class="modal-contenido" (click)="$event.stopPropagation()">
+    <button class="modal-cerrar" (click)="cerrarModal()">&times;</button>
+    
+    <div class="modal-grid">
+      <div class="modal-imagen">
+        <img [src]="imagenUrl" [alt]="coche.marca + ' ' + coche.modelo">
+      </div>
+      
+      <div class="modal-info">
+        <h2>{{ coche.marca }} {{ coche.modelo }}</h2>
+        
+        <div class="detalles-grid">
+          <div class="detalle"><strong>Categoría:</strong> {{ coche.categoria }}</div>
+          <div class="detalle"><strong>Año:</strong> {{ coche.anio }}</div>
+          <div class="detalle"><strong>Precio:</strong> {{ coche.precio | currency:'EUR' }}</div>
+          <div class="detalle"><strong>Motor:</strong> {{ coche.motor }}</div>
+          <div class="detalle"><strong>Potencia:</strong> {{ coche.potencia }} CV</div>
+          <div class="detalle"><strong>Combustible:</strong> {{ coche.combustible }}</div>
+          <div class="detalle"><strong>Transmisión:</strong> {{ coche.transmision }}</div>
+        </div>
+        
+        <div class="descripcion">
+          <h3>Descripción</h3>
+          <p>{{ coche.descripcion }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="home-container">
+  <section class="hero">
+    <h2>Encuentra el coche de tus sueños</h2>
+    <p>Explora nuestro catálogo con más de 15 modelos diferentes</p>
+  </section>
+
+  <div class="filtros-categorias">
+    <button (click)="cargarCoches()">Todos</button>
+    <button *ngFor="let cat of ['SUV', 'Sedán', 'Deportivo', 'Eléctrico', 'Hatchback']" 
+            (click)="filtrarPorCategoria(cat)">
+      {{ cat }}
+    </button>
+  </div>
+
+  <!-- Estado de carga -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando coches... ({{ coches.length }} cargados)</p>
+  </div>
+
+  <!-- Estado de error -->
+  <div *ngIf="error" class="error-container">
+    <p class="error-message">{{ errorMessage }}</p>
+    <button class="btn-recargar" (click)="recargar()">Reintentar</button>
+  </div>
+
+  <!-- Grid de coches -->
+  <div class="coches-grid" *ngIf="!loading && !error && coches.length > 0">
+    <app-card *ngFor="let coche of coches" [coche]="coche"></app-card>
+  </div>
+
+  <!-- Sin resultados -->
+  <div *ngIf="!loading && !error && coches.length === 0" class="no-results">
+    <p>No hay coches disponibles en el catálogo</p>
+  </div>
+</div>

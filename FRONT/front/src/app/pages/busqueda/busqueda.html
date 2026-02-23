@@ -1,0 +1,45 @@
+<div class="busqueda-container">
+  <div class="buscador-section">
+    <h2>Buscar Coches</h2>
+    
+    <div class="buscador-form">
+      <input
+        type="text"
+        [(ngModel)]="terminoBusqueda"
+        (keyup.enter)="buscar()"
+        placeholder="Buscar por marca o modelo..."
+        class="buscador-input"
+      >
+      <button 
+        (click)="buscar()" 
+        class="buscador-btn"
+        [disabled]="!terminoBusqueda.trim()"
+      >
+        Buscar
+      </button>
+      <button 
+        *ngIf="terminoBusqueda"
+        (click)="limpiarBusqueda()" 
+        class="limpiar-btn"
+      >
+        Limpiar
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <app-loading mensaje="Buscando coches..."></app-loading>
+  </div>
+
+  <div *ngIf="error" class="error-container">
+    <p class="error-message">{{ mensajeError }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && coches.length === 0 && terminoBusqueda" class="no-results">
+    <p>No se encontraron coches para "{{ terminoBusqueda }}"</p>
+  </div>
+
+  <div class="coches-grid" *ngIf="!loading && !error && coches.length > 0">
+    <app-card *ngFor="let coche of coches" [coche]="coche"></app-card>
+  </div>
+</div>
