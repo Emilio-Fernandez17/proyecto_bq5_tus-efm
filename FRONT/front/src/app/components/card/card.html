@@ -6,39 +6,17 @@
   </div>
   
   <div class="card-content">
-    <div class="card-header">
-      <h3>{{ coche.marca }} {{ coche.modelo }}</h3>
-      <span class="categoria-badge">{{ coche.categoria }}</span>
-    </div>
-    
-    <div class="card-details">
-      <div class="detail-item">
-        <span class="detail-label">Año</span>
-        <span class="detail-value">{{ coche.anio }}</span>
-      </div>
-      <div class="detail-item">
-        <span class="detail-label">Precio</span>
-        <span class="detail-value precio">{{ coche.precio | currency:'EUR':'symbol':'1.0-0' }}</span>
-      </div>
-    </div>
-    
-    <button class="btn-ver-mas" (click)="abrirModal()">
-      <span>Ver detalles</span>
-      <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M5 12h14M12 5l7 7-7 7"/>
-      </svg>
-    </button>
+    <h3>{{ coche.marca }} {{ coche.modelo }}</h3>
+    <p class="categoria">{{ coche.categoria }}</p>
+    <p class="precio">{{ coche.precio | currency:'EUR':'symbol':'1.0-0' }}</p>
+    <button class="btn-ver-mas" (click)="abrirModal()">Ver más</button>
   </div>
 </div>
 
-<!-- MODAL PROFESIONAL -->
+<!-- Modal -->
 <div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <button class="modal-close" (click)="cerrarModal()">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M18 6L6 18M6 6l12 12"/>
-      </svg>
-    </button>
+    <button class="modal-close" (click)="cerrarModal()">&times;</button>
     
     <div class="modal-grid">
       <div class="modal-image">
@@ -47,54 +25,39 @@
       
       <div class="modal-info">
         <h2>{{ coche.marca }} {{ coche.modelo }}</h2>
-        <span class="modal-categoria">{{ coche.categoria }}</span>
         
-        <div class="modal-details-grid">
-          <div class="modal-detail-item">
-            <span class="detail-icon">📅</span>
-            <div>
-              <span class="detail-label-modal">Año</span>
-              <span class="detail-value-modal">{{ coche.anio }}</span>
-            </div>
+        <div class="detalles-grid">
+          <div class="detalle">
+            <span class="detalle-label">Categoría</span>
+            <span class="detalle-valor">{{ coche.categoria }}</span>
           </div>
-          <div class="modal-detail-item">
-            <span class="detail-icon">💰</span>
-            <div>
-              <span class="detail-label-modal">Precio</span>
-              <span class="detail-value-modal precio">{{ coche.precio | currency:'EUR' }}</span>
-            </div>
+          <div class="detalle">
+            <span class="detalle-label">Año</span>
+            <span class="detalle-valor">{{ coche.anio }}</span>
           </div>
-          <div class="modal-detail-item">
-            <span class="detail-icon">⚙️</span>
-            <div>
-              <span class="detail-label-modal">Motor</span>
-              <span class="detail-value-modal">{{ coche.motor }}</span>
-            </div>
+          <div class="detalle">
+            <span class="detalle-label">Precio</span>
+            <span class="detalle-valor">{{ coche.precio | currency:'EUR' }}</span>
           </div>
-          <div class="modal-detail-item">
-            <span class="detail-icon">💪</span>
-            <div>
-              <span class="detail-label-modal">Potencia</span>
-              <span class="detail-value-modal">{{ coche.potencia }} CV</span>
-            </div>
+          <div class="detalle">
+            <span class="detalle-label">Motor</span>
+            <span class="detalle-valor">{{ coche.motor }}</span>
           </div>
-          <div class="modal-detail-item">
-            <span class="detail-icon">⛽</span>
-            <div>
-              <span class="detail-label-modal">Combustible</span>
-              <span class="detail-value-modal">{{ coche.combustible }}</span>
-            </div>
+          <div class="detalle">
+            <span class="detalle-label">Potencia</span>
+            <span class="detalle-valor">{{ coche.potencia }} CV</span>
           </div>
-          <div class="modal-detail-item">
-            <span class="detail-icon">🔄</span>
-            <div>
-              <span class="detail-label-modal">Transmisión</span>
-              <span class="detail-value-modal">{{ coche.transmision }}</span>
-            </div>
+          <div class="detalle">
+            <span class="detalle-label">Combustible</span>
+            <span class="detalle-valor">{{ coche.combustible }}</span>
+          </div>
+          <div class="detalle">
+            <span class="detalle-label">Transmisión</span>
+            <span class="detalle-valor">{{ coche.transmision }}</span>
           </div>
         </div>
         
-        <div class="modal-descripcion">
+        <div class="descripcion">
           <h3>Descripción</h3>
           <p>{{ coche.descripcion }}</p>
         </div>

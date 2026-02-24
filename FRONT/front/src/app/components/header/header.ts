@@ -31,6 +31,7 @@ export class Header {
   buscarPorCategoria(categoria: string, event: Event) {
     event.preventDefault();
     this.cerrarMenu();
+    console.log('🔍 Buscando por categoría:', categoria);
     this.router.navigate(['/buscar'], { queryParams: { categoria } });
   }
 }

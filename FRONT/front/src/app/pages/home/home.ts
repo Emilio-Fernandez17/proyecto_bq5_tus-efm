@@ -19,7 +19,7 @@ export class Home implements OnInit {
   constructor(
     private cochesService: CochesService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.cargarCoches();
@@ -29,16 +29,16 @@ export class Home implements OnInit {
     this.loading = true;
     this.cochesService.getAllCoches().subscribe({
       next: (data: any) => {
-        console.log('📦 Datos recibidos:', data);
-
-        // ASIGNACIÓN DIRECTA - FORZADA
-        this.coches = data;
-
-        console.log('✅ Coches asignados:', this.coches.length);
+        if (Array.isArray(data)) {
+          this.coches = data;
+        } else if (data && data.data && Array.isArray(data.data)) {
+          this.coches = data.data;
+        } else if (data && data.rows && Array.isArray(data.rows)) {
+          this.coches = data.rows;
+        } else {
+          this.coches = [];
+        }
         this.loading = false;
-
-        // Forzar detección de cambios
-        setTimeout(() => { }, 0);
       },
       error: (err) => {
         console.error('Error:', err);

@@ -15,25 +15,11 @@ export class Card implements OnInit {
   imagenUrl: string = '';
   mostrarModal = false;
 
-  constructor(private cochesService: CochesService) {
-    console.log('🟢 Card constructor');
-  }
+  constructor(private cochesService: CochesService) {}
 
   ngOnInit() {
-    console.log('🟣 Datos del coche en Card:', JSON.stringify(this.coche, null, 2));
-    
-    // Verificar que los datos existen
-    if (this.coche) {
-      console.log('🟣 Marca:', this.coche.marca);
-      console.log('🟣 Modelo:', this.coche.modelo);
-      
-      // Construir URL de imagen
-      if (this.coche.imagen) {
-        this.imagenUrl = this.cochesService.getImagenUrl(this.coche.imagen);
-        console.log('🟣 URL imagen:', this.imagenUrl);
-      }
-    } else {
-      console.error('🔴 ERROR: coche es undefined');
+    if (this.coche?.imagen) {
+      this.imagenUrl = this.cochesService.getImagenUrl(this.coche.imagen);
     }
   }
 

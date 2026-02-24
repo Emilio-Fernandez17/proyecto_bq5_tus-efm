@@ -7,19 +7,13 @@ import { Coche } from '../models/coche.model';
   providedIn: 'root'
 })
 export class CochesService {
-  // IMPORTANTE: Esta URL debe coincidir con tu backend
   private apiUrl = 'http://localhost:3000/api/coches';
-  private baseImagenes = 'http://localhost:3000/';  // Sin /img/ para construir después
+  private baseUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) { }
 
   getAllCoches(): Observable<Coche[]> {
-    console.log('🌐 Llamando a API:', this.apiUrl);
     return this.http.get<Coche[]>(this.apiUrl);
-  }
-
-  getCategorias(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/categorias`);
   }
 
   getCochesByCategoria(categoria: string): Observable<Coche[]> {
@@ -31,9 +25,6 @@ export class CochesService {
   }
 
   getImagenUrl(imagenRelativa: string): string {
-    // Si la imagen viene como "img/toyota-rav4.jpg"
-    const url = this.baseImagenes + imagenRelativa;
-    console.log('🖼️ URL imagen:', url);
-    return url;
+    return `${this.baseUrl}/${imagenRelativa}`;
   }
 }
