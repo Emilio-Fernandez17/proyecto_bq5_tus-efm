@@ -25,6 +25,7 @@ router.get("/", async (req, res) => {
 
         res.json(result.rows);
     } catch (e) {
+        console.error('❌ Error en GET /:', e);
         res.status(500).json({
             error: "Error listando coches",
             details: e.message,
@@ -43,6 +44,7 @@ router.get("/categorias", async (req, res) => {
 
         res.json(result.rows.map(r => r.categoria));
     } catch (e) {
+        console.error('❌ Error en /categorias:', e);
         res.status(500).json({
             error: "Error listando categorías",
             details: e.message,
@@ -54,8 +56,10 @@ router.get("/categorias", async (req, res) => {
 router.get("/categoria/:categoria", async (req, res) => {
     try {
         const categoria = req.params.categoria;
+        console.log('🔍 Buscando categoría:', categoria);
 
-        const result = awaitquery(`
+        // ✅ CORREGIDO: Usar :1 en lugar de :categoria
+        const result = await query(`
             SELECT 
                 id AS "id",
                 marca AS "marca",
@@ -70,12 +74,14 @@ router.get("/categoria/:categoria", async (req, res) => {
                 imagen AS "imagen",
                 descripcion AS "descripcion"
             FROM coches
-            WHERE categoria = :1
+            WHERE LOWER(categoria) = LOWER(:1)
             ORDER BY marca, modelo
         `, [categoria]);
 
+        console.log('✅ Resultados encontrados:', result.rows.length);
         res.json(result.rows);
     } catch (e) {
+        console.error('❌ Error en /categoria:', e);
         res.status(500).json({
             error: "Error filtrando por categoría",
             details: e.message,
@@ -87,8 +93,9 @@ router.get("/categoria/:categoria", async (req, res) => {
 router.get("/marca/:marca", async (req, res) => {
     try {
         const marca = req.params.marca;
+        console.log('🔍 Buscando marca:', marca);
 
-        const result = awaitquery(`
+        const result = await query(`
             SELECT 
                 id AS "id",
                 marca AS "marca",
@@ -107,8 +114,10 @@ router.get("/marca/:marca", async (req, res) => {
             ORDER BY modelo
         `, [marca]);
 
+        console.log('✅ Resultados encontrados:', result.rows.length);
         res.json(result.rows);
     } catch (e) {
+        console.error('❌ Error en /marca:', e);
         res.status(500).json({
             error: "Error filtrando por marca",
             details: e.message,
@@ -120,12 +129,17 @@ router.get("/marca/:marca", async (req, res) => {
 router.get("/search", async (req, res) => {
     try {
         const searchTerm = req.query.q;
+        console.log('🔎 Término de búsqueda:', searchTerm);
 
         if (!searchTerm) {
             return res.status(400).json({ error: "Debe proporcionar un término de búsqueda" });
         }
 
-        const result = awaitquery(`
+        // ✅ VERSIÓN CORREGIDA - Sin placeholders duplicados
+        // Usamos UPPER y concatenamos directamente en la consulta
+        const term = searchTerm.toUpperCase();
+        
+        const result = await query(`
             SELECT 
                 id AS "id",
                 marca AS "marca",
@@ -140,13 +154,15 @@ router.get("/search", async (req, res) => {
                 imagen AS "imagen",
                 descripcion AS "descripcion"
             FROM coches
-            WHERE LOWER(modelo) LIKE LOWER('%' || :1 || '%') 
-               OR LOWER(marca) LIKE LOWER('%' || :1 || '%')
+            WHERE UPPER(marca) LIKE UPPER('%${term}%')
+               OR UPPER(modelo) LIKE UPPER('%${term}%')
             ORDER BY marca, modelo
-        `, [searchTerm]);
+        `);
 
+        console.log('✅ Resultados encontrados:', result.rows.length);
         res.json(result.rows);
     } catch (e) {
+        console.error('❌ Error en /search:', e);
         res.status(500).json({
             error: "Error en la búsqueda",
             details: e.message,

@@ -1,31 +1,81 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CochesService } from '../../services/coches.service';
-import { Coche } from '../../models/coche.model';
 import { Card } from '../../components/card/card';
-import { Loading } from '../../components/loading/loading';
 
 @Component({
   selector: 'app-busqueda',
   standalone: true,
-  imports: [CommonModule, FormsModule, Card, Loading],
-  templateUrl: './busqueda.html',
+  imports: [FormsModule, Card],
+  template: `
+    <div class="busqueda-container">
+      <div class="buscador-section">
+        <h2>Buscar Coches</h2>
+        
+        <div class="buscador-form">
+          <input
+            type="text"
+            [(ngModel)]="terminoBusqueda"
+            (keyup.enter)="buscar()"
+            placeholder="Buscar por marca o modelo..."
+            class="buscador-input"
+          >
+          <button 
+            (click)="buscar()" 
+            class="buscador-btn"
+            [disabled]="!terminoBusqueda.trim()"
+          >
+            Buscar
+          </button>
+          @if (terminoBusqueda) {
+            <button (click)="limpiarBusqueda()" class="limpiar-btn">
+              Limpiar
+            </button>
+          }
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="loading-container">
+          <div class="spinner"></div>
+          <p>Buscando coches...</p>
+        </div>
+      }
+
+      @if (error()) {
+        <div class="error-container">
+          <p class="error-message">{{ mensajeError() }}</p>
+        </div>
+      }
+
+      @if (!loading() && !error() && coches().length > 0) {
+        <div class="coches-grid">
+          @for (coche of coches(); track coche.id) {
+            <app-card [coche]="coche" />
+          }
+        </div>
+      }
+
+      @if (!loading() && !error() && coches().length === 0 && terminoBusqueda) {
+        <div class="no-results">
+          <p>No se encontraron coches para "{{ terminoBusqueda }}"</p>
+        </div>
+      }
+    </div>
+  `,
   styleUrls: ['./busqueda.css']
 })
 export class Busqueda implements OnInit {
-  terminoBusqueda: string = '';
-  coches: Coche[] = [];
-  loading = false;
-  error = false;
-  mensajeError: string = '';
+  private cochesService = inject(CochesService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
-  constructor(
-    private cochesService: CochesService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  terminoBusqueda: string = '';
+  coches = signal<any[]>([]);
+  loading = signal(false);
+  error = signal(false);
+  mensajeError = signal('');
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -39,53 +89,58 @@ export class Busqueda implements OnInit {
   }
 
   buscar() {
-    if (!this.terminoBusqueda.trim()) {
-      return;
-    }
+    if (!this.terminoBusqueda.trim()) return;
 
-    this.loading = true;
-    this.error = false;
-    this.router.navigate([], { queryParams: { q: this.terminoBusqueda } });
+    this.loading.set(true);
+    this.error.set(false);
+    
+    this.router.navigate([], { 
+      queryParams: { q: this.terminoBusqueda },
+      queryParamsHandling: 'merge' 
+    });
 
     this.cochesService.searchCoches(this.terminoBusqueda).subscribe({
       next: (data) => {
-        this.coches = data;
-        this.loading = false;
+        this.coches.set(data);
+        this.loading.set(false);
         if (data.length === 0) {
-          this.mensajeError = 'No se encontraron coches con ese término';
+          this.mensajeError.set(`No se encontraron coches para "${this.terminoBusqueda}"`);
         }
       },
       error: (err) => {
         console.error('Error:', err);
-        this.error = true;
-        this.loading = false;
-        this.mensajeError = 'Error al realizar la búsqueda';
+        this.error.set(true);
+        this.loading.set(false);
+        this.mensajeError.set('Error al realizar la búsqueda');
       }
     });
   }
 
   buscarPorCategoria(categoria: string) {
-    this.loading = true;
-    this.error = false;
+    this.loading.set(true);
+    this.error.set(false);
+    this.terminoBusqueda = categoria;
 
     this.cochesService.getCochesByCategoria(categoria).subscribe({
       next: (data) => {
-        this.coches = data;
-        this.loading = false;
-        this.terminoBusqueda = categoria;
+        this.coches.set(data);
+        this.loading.set(false);
+        if (data.length === 0) {
+          this.mensajeError.set(`No hay coches en la categoría "${categoria}"`);
+        }
       },
       error: (err) => {
         console.error('Error:', err);
-        this.error = true;
-        this.loading = false;
-        this.mensajeError = 'Error al cargar la categoría';
+        this.error.set(true);
+        this.loading.set(false);
+        this.mensajeError.set('Error al cargar la categoría');
       }
     });
   }
 
   limpiarBusqueda() {
     this.terminoBusqueda = '';
-    this.coches = [];
+    this.coches.set([]);
     this.router.navigate(['/buscar']);
   }
 }
