@@ -59,7 +59,6 @@
   font-weight: 500;
 }
 
-/* MODAL */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -73,7 +72,7 @@
   z-index: 2000;
 }
 
-.modal-contenido {
+.modal-content {
   background: white;
   border-radius: 10px;
   width: 90%;
@@ -84,7 +83,7 @@
   padding: 2rem;
 }
 
-.modal-cerrar {
+.modal-close {
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -101,7 +100,7 @@
   gap: 2rem;
 }
 
-.modal-imagen img {
+.modal-image img {
   width: 100%;
   border-radius: 5px;
 }
@@ -117,7 +116,19 @@
   background: #f5f5f5;
   padding: 0.5rem;
   border-radius: 5px;
-  font-size: 0.9rem;
+}
+
+.detalle-label {
+  display: block;
+  color: #666;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+
+.detalle-valor {
+  display: block;
+  color: #333;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {

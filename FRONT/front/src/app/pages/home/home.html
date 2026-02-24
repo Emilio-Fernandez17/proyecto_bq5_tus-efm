@@ -1,8 +1,8 @@
 <div class="home-container">
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1>Encuentra el coche de tus sueños</h1>
-    <p>Explora nuestro catálogo con más de 15 modelos diferentes</p>
+  <!-- Hero Section con animación -->
+  <section class="hero animate-fadeIn">
+    <h1 class="animate-slideInUp">Encuentra el coche de tus sueños</h1>
+    <p class="animate-slideInUp" style="animation-delay: 0.2s;">Explora nuestro catálogo con más de 15 modelos diferentes</p>
   </section>
 
   <!-- Filtros rápidos -->
@@ -17,22 +17,20 @@
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
     <div class="spinner"></div>
-    <p>Cargando coches... ({{ coches.length }} cargados)</p>
+    <p>Cargando coches...</p>
   </div>
 
-  <!-- Error State -->
-  <div *ngIf="error" class="error-container">
-    <p class="error-message">{{ errorMessage }}</p>
-    <button class="btn-reintentar" (click)="recargar()">Reintentar</button>
-  </div>
-
-  <!-- Grid de Coches - ESTA ES LA PARTE IMPORTANTE -->
-  <div *ngIf="!loading && !error && coches.length > 0" class="coches-grid">
-    <app-card *ngFor="let coche of coches" [coche]="coche"></app-card>
+  <!-- Grid de Coches -->
+  <div *ngIf="!loading && coches.length > 0" class="coches-grid">
+    <app-card *ngFor="let coche of coches; let i = index" 
+              [coche]="coche"
+              [style.animation-delay]="i * 0.1 + 's'"
+              class="animate-fadeInUp">
+    </app-card>
   </div>
 
   <!-- Sin Resultados -->
-  <div *ngIf="!loading && !error && coches.length === 0" class="no-results">
-    <p>No hay coches disponibles en el catálogo</p>
+  <div *ngIf="!loading && coches.length === 0" class="no-results">
+    <p>No hay coches disponibles en este momento</p>
   </div>
 </div>

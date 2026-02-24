@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CochesService } from '../../services/coches.service';
-import { Coche } from '../../models/coche.model';
 import { Card } from '../../components/card/card';
 import { Router } from '@angular/router';
 
@@ -13,10 +12,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.css']
 })
 export class Home implements OnInit {
-  coches: Coche[] = [];
+  coches: any[] = [];
   loading = true;
   error = false;
-  errorMessage = '';
 
   constructor(
     private cochesService: CochesService,
@@ -24,37 +22,33 @@ export class Home implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('🏠 Home iniciado');
     this.cargarCoches();
   }
 
   cargarCoches() {
-    console.log('🔄 Cargando coches...');
     this.loading = true;
-    this.error = false;
-    
     this.cochesService.getAllCoches().subscribe({
-      next: (data) => {
-        console.log('✅ Datos recibidos:', data.length);
-        this.coches = data;
+      next: (data: any) => {
+        if (Array.isArray(data)) {
+          this.coches = data;
+        } else if (data && data.data && Array.isArray(data.data)) {
+          this.coches = data.data;
+        } else if (data && data.rows && Array.isArray(data.rows)) {
+          this.coches = data.rows;
+        } else {
+          this.coches = [];
+        }
         this.loading = false;
       },
       error: (err) => {
-        console.error('❌ Error:', err);
+        console.error('Error:', err);
         this.error = true;
-        this.errorMessage = err.message || 'Error al cargar los coches';
         this.loading = false;
       }
     });
   }
 
   filtrarPorCategoria(categoria: string) {
-    console.log('🔍 Filtrando por:', categoria);
     this.router.navigate(['/buscar'], { queryParams: { categoria } });
-  }
-
-  recargar() {
-    console.log('🔄 Recargando...');
-    this.cargarCoches();
   }
 }
