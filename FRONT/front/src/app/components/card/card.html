@@ -1,15 +1,104 @@
-<div style="border: 3px solid blue; margin: 10px; padding: 10px; background: #e6f3ff;">
-  <h3>{{ coche.marca }} {{ coche.modelo }} - {{ coche.categoria }}</h3>
-  <p>Precio: {{ coche.precio | currency:'EUR' }}</p>
-  <p>Año: {{ coche.anio }}</p>
-  <button (click)="abrirModal()">Ver detalles</button>
+<div class="coche-card">
+  <div class="card-image">
+    <img [src]="imagenUrl" 
+         [alt]="coche.marca + ' ' + coche.modelo"
+         (error)="imagenUrl = 'https://via.placeholder.com/300x200?text=Sin+imagen'">
+  </div>
+  
+  <div class="card-content">
+    <div class="card-header">
+      <h3>{{ coche.marca }} {{ coche.modelo }}</h3>
+      <span class="categoria-badge">{{ coche.categoria }}</span>
+    </div>
+    
+    <div class="card-details">
+      <div class="detail-item">
+        <span class="detail-label">Año</span>
+        <span class="detail-value">{{ coche.anio }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Precio</span>
+        <span class="detail-value precio">{{ coche.precio | currency:'EUR':'symbol':'1.0-0' }}</span>
+      </div>
+    </div>
+    
+    <button class="btn-ver-mas" (click)="abrirModal()">
+      <span>Ver detalles</span>
+      <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
 </div>
 
-<div *ngIf="mostrarModal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center;">
-  <div style="background:white; padding:20px;">
-    <h2>{{ coche.marca }} {{ coche.modelo }}</h2>
-    <p><strong>Categoría:</strong> {{ coche.categoria }}</p>
-    <p><strong>Precio:</strong> {{ coche.precio | currency:'EUR' }}</p>
-    <button (click)="cerrarModal()">Cerrar</button>
+<!-- MODAL PROFESIONAL -->
+<div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="cerrarModal()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    
+    <div class="modal-grid">
+      <div class="modal-image">
+        <img [src]="imagenUrl" [alt]="coche.marca + ' ' + coche.modelo">
+      </div>
+      
+      <div class="modal-info">
+        <h2>{{ coche.marca }} {{ coche.modelo }}</h2>
+        <span class="modal-categoria">{{ coche.categoria }}</span>
+        
+        <div class="modal-details-grid">
+          <div class="modal-detail-item">
+            <span class="detail-icon">📅</span>
+            <div>
+              <span class="detail-label-modal">Año</span>
+              <span class="detail-value-modal">{{ coche.anio }}</span>
+            </div>
+          </div>
+          <div class="modal-detail-item">
+            <span class="detail-icon">💰</span>
+            <div>
+              <span class="detail-label-modal">Precio</span>
+              <span class="detail-value-modal precio">{{ coche.precio | currency:'EUR' }}</span>
+            </div>
+          </div>
+          <div class="modal-detail-item">
+            <span class="detail-icon">⚙️</span>
+            <div>
+              <span class="detail-label-modal">Motor</span>
+              <span class="detail-value-modal">{{ coche.motor }}</span>
+            </div>
+          </div>
+          <div class="modal-detail-item">
+            <span class="detail-icon">💪</span>
+            <div>
+              <span class="detail-label-modal">Potencia</span>
+              <span class="detail-value-modal">{{ coche.potencia }} CV</span>
+            </div>
+          </div>
+          <div class="modal-detail-item">
+            <span class="detail-icon">⛽</span>
+            <div>
+              <span class="detail-label-modal">Combustible</span>
+              <span class="detail-value-modal">{{ coche.combustible }}</span>
+            </div>
+          </div>
+          <div class="modal-detail-item">
+            <span class="detail-icon">🔄</span>
+            <div>
+              <span class="detail-label-modal">Transmisión</span>
+              <span class="detail-value-modal">{{ coche.transmision }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-descripcion">
+          <h3>Descripción</h3>
+          <p>{{ coche.descripcion }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
