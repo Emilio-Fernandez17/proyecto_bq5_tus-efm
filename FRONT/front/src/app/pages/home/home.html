@@ -1,35 +1,37 @@
 <div class="home-container">
+  <!-- Hero Section -->
   <section class="hero">
-    <h2>Encuentra el coche de tus sueños</h2>
+    <h1>Encuentra el coche de tus sueños</h1>
     <p>Explora nuestro catálogo con más de 15 modelos diferentes</p>
   </section>
 
-  <div class="filtros-categorias">
-    <button (click)="cargarCoches()">Todos</button>
-    <button *ngFor="let cat of ['SUV', 'Sedán', 'Deportivo', 'Eléctrico', 'Hatchback']" 
+  <!-- Filtros rápidos -->
+  <div class="filtros-container">
+    <button class="filtro-btn" (click)="cargarCoches()">Todos</button>
+    <button class="filtro-btn" *ngFor="let cat of ['SUV', 'Sedán', 'Deportivo', 'Eléctrico', 'Hatchback']" 
             (click)="filtrarPorCategoria(cat)">
       {{ cat }}
     </button>
   </div>
 
-  <!-- Estado de carga -->
+  <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
     <div class="spinner"></div>
     <p>Cargando coches... ({{ coches.length }} cargados)</p>
   </div>
 
-  <!-- Estado de error -->
+  <!-- Error State -->
   <div *ngIf="error" class="error-container">
     <p class="error-message">{{ errorMessage }}</p>
-    <button class="btn-recargar" (click)="recargar()">Reintentar</button>
+    <button class="btn-reintentar" (click)="recargar()">Reintentar</button>
   </div>
 
-  <!-- Grid de coches -->
-  <div class="coches-grid" *ngIf="!loading && !error && coches.length > 0">
+  <!-- Grid de Coches - ESTA ES LA PARTE IMPORTANTE -->
+  <div *ngIf="!loading && !error && coches.length > 0" class="coches-grid">
     <app-card *ngFor="let coche of coches" [coche]="coche"></app-card>
   </div>
 
-  <!-- Sin resultados -->
+  <!-- Sin Resultados -->
   <div *ngIf="!loading && !error && coches.length === 0" class="no-results">
     <p>No hay coches disponibles en el catálogo</p>
   </div>
